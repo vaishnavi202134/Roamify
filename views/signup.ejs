@@ -1,0 +1,18 @@
+<% layout("/layouts/boilerplate") %>
+
+<title>Signup</title>
+</head>
+<h1 style="color: red;">Signup on WanderLust</h1>
+<form action="/signup" method="POST">
+  <div class="mb-3">
+    <label for="email" class="form-label">Email address</label>
+    <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+  </div><br>
+
+  <div>
+    <label for="inputPassword6" class="col-form-label">Password</label>
+    <input placeholder="Password" type="password" name="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline" required>
+  </div><br><br>
+
+  <button class="btn btn-success" type="submit">Signup</button><br><br>
+</form>

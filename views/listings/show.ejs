@@ -1,0 +1,115 @@
+<% layout("/layouts/boilerplate") %>
+    <h3><%= listing.title %></h3>
+    <div class="card">
+        <div class="card" style="width: 40rem;">
+            <img src="<%= listing.image && listing.image.url ? listing.image.url : listing.image %>" class="card-img-top" alt="listing_image">
+            <div class="card-body"></div>
+        </div>
+    </div>
+    <ul >
+        <li><%= listing.description %></li>
+          &#8377; <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %>/night
+        <li><%= listing.location %></li>
+        <li><%= listing.country %></li>
+    </ul>
+    <br/>
+    <a style="background-color: red;" class="btn btn-dark onset-4" href="/listings/<%= listing._id %>/edit" >Edit this listing</a>
+    
+    <br><br>
+    <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+        <button style="background-color: red;" class="btn btn-dark onset-4 ">Delete </button>
+      </form>
+    
+        <hr/>
+        <h4>Leave a Review</h4>
+    
+      <form action="/listings/<%= listing._id %>/reviews" method="POST" novalidate class="needs-validation">
+        <div class="mb-3 mt-3">
+          <label for="rating" class="form-label">Rating</label>
+          <select id="rating" name="review[rating]" class="form-select" required>
+            <option value="" disabled selected>Select rating</option>
+            <option value="1">1 - Terrible</option>
+            <option value="2">2 - Not good</option>
+            <option value="3">3 - Average</option>
+            <option value="4">4 - Very good</option>
+            <option value="5">5 - Amazing</option>
+          </select>
+
+          <div class="mb-3 mt-3">
+            <label for="comment" class="form-label">Comments</label>
+            <textarea
+              name="review[comment]"
+              id="comment"
+              cols="30"
+              rows="5"
+              class="form-control"
+              required
+            ></textarea>
+            <div class="invalid-feedback">Please enter your review.</div>
+          </div>
+        </div>
+
+        <button class="btn btn-outline-dark">Submit</button>
+      </form>
+      <hr />
+      <h4>All reviews</h4>
+      <% if (listing.reviews && listing.reviews.length) { %>
+        <div class="list-group mb-4">
+          <% listing.reviews.forEach((review) => { %>
+            <div class="list-group-item rounded shadow-sm mb-2">
+              <strong>Rating:</strong> <%= review.rating %> / 5<br />
+              <strong>Comment:</strong> <%= review.comment %><br />
+              <small class="text-muted">Posted: <%= review.createdAt.toLocaleString() %></small>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="text-muted">No reviews yet for this listing.</p>
+      <% } %>
+    <hr />
+    <h4>Location Map</h4>
+    <div id="map" style="height: 400px;"></div>
+    <div id="map-message" class="text-muted mt-2"></div>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const mapMessage = document.getElementById("map-message");
+        const locationString = <%- JSON.stringify(listing.location || "") %>;
+        const popupHtml = <%- JSON.stringify(`${listing.title} <br> ${listing.location}`) %>;
+
+        if (!locationString) {
+          mapMessage.textContent = "Location not available for this listing.";
+          return;
+        }
+
+        const map = L.map("map").setView([20.5937, 78.9629], 5);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "&copy; OpenStreetMap contributors",
+        }).addTo(map);
+
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationString)}`)
+          .then((response) => response.json())
+          .then((data) => {
+            if (!data || !data.length) {
+              mapMessage.textContent = "Could not find map coordinates for this location.";
+              return;
+            }
+            const place = data[0];
+            const lat = parseFloat(place.lat);
+            const lon = parseFloat(place.lon);
+            map.setView([lat, lon], 13);
+            L.marker([lat, lon])
+              .addTo(map)
+              .bindPopup(popupHtml)
+              .openPopup();
+          })
+          .catch(() => {
+            mapMessage.textContent = "An error occurred while loading the map.";
+          });
+      });
+    </script>
+
+
+

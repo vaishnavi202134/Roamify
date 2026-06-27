@@ -1,0 +1,79 @@
+<style>
+  .navbar-custom {
+    background: linear-gradient(135deg, #2d2d72, #6b5b95);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+  .navbar-custom .nav-link,
+  .navbar-custom .navbar-brand,
+  .navbar-custom .form-control,
+  .navbar-custom .btn-search {
+    color: #f8f9fa;
+  }
+  .navbar-custom .nav-link:hover,
+  .navbar-custom .navbar-brand:hover {
+    color: #ffd369;
+  }
+  .btn-search {
+    background: #ff5f7d;
+    border: none;
+    border-radius: 45px;
+    padding: 0.5rem 1rem;
+    color: white;
+  }
+  .btn-search:hover {
+    background: #ff8493;
+    color: white;
+  }
+  .btn-search i {
+    margin-right: 0.5rem;
+  }
+  .search-inp {
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #f8f9fa;
+  }
+  .search-inp::placeholder {
+    color: rgba(248, 249, 250, 0.7);
+  }
+  .navbar-custom .form-control:focus {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    box-shadow: none;
+  }
+  .nav-btn {
+    margin-left: 0.5rem;
+    border-radius: 30px;
+    padding: 0.45rem 1rem;
+  }
+</style>
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/listings"><i class="fa-solid fa-compass"></i> WanderLust</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">Explore</a>
+      </div>
+      <div class="navbar-nav ms-auto align-items-center">
+        <form class="d-flex" role="search" action="/listings" method="GET">
+          <input class="form-control me-2 search-inp" type="search" name="search" placeholder="Search destination" aria-label="Search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+          <button class="btn btn-search" type="submit"><i class="fa-sharp fa-solid fa-magnifying-glass"></i>Search</button>
+        </form>
+      </div>
+      <div class="navbar-nav ms-3">
+        <a class="nav-link nav-btn" href="/listing/new"><i class="fa fa-globe" style="font-size:15px"></i>List Your Stay</a>
+        <% if (!currentUser) { %>
+          <a class="nav-link nav-btn" href="/signup">Sign Up</a>
+          <a class="nav-link nav-btn" href="/login">Log In</a>
+        <% } else { %>
+          <span class="nav-link nav-btn disabled">Hello,Sumit</span>
+          <a class="nav-link nav-btn" href="/logout">Log Out</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>
+  
